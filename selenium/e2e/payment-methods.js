@@ -63,7 +63,7 @@ describe('payment methods', () => {
 
         await driver.findElement(By.id('criteria_search_value')).sendKeys('cash');
         await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
-        await driver.findElement(By.css('*[class^="icon remove"]')).click();
+        await driver.findElement(By.linkText('Clear filters')).click();
 
         const bodyText = await driver.findElement(By.tagName('body')).getText();
         assert(bodyText.includes('Bank transfer'));
