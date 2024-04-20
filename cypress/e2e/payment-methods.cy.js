@@ -100,7 +100,7 @@ describe('payment methods', () => {
     cy.get('*[class^="ui blue labeled icon button"]').click();
 
     // Assert that payment method has been changed to disable
-    cy.get('*[class^="ui sortable stackable very basic celled table"]').should('contain', ' Disabled');
+    cy.get('*[class^="ui sortable stackable very basic celled table"]').should('contain', 'Disabled');
   });
 
 
