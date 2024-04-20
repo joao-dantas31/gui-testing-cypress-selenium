@@ -34,40 +34,44 @@ describe('payment methods', () => {
         cy.get('tbody').should('have.length', 1);
     });
 
-    it('try delete a enabled payment method', () => {
+    it('trying to clear filters after the search', () => {
+        cy.debug();
         cy.clickInFirst('a[href="/admin/payment-methods/"]');
 
-        cy.get('[id="criteria_search_value"]').type('cash');
+        cy.get('[id="criteria_search_value"]').type('bank_transfer');
 
         cy.get('*[class^="ui blue labeled icon button"]').click();
 
-        cy.get('*[class^="ui red labeled icon button"]').last().click();
+        cy.clickInFirst('*[class^="ui labeled icon button"]');
 
-        cy.get('*[class^="ui green ok inverted button"]').click();
-
-        cy.get('body').should('contain', 'Cannot delete, the Payment method is in use.');
+        cy.get('tbody').should('contain', 'Cash on delivery');
+        cy.get('tbody').should('contain', 'Bank transfer');
     });
 
-    it('try disable a payment method', () => {
+    it('trying to change the payment name', () => {
         cy.clickInFirst('a[href="/admin/payment-methods/"]');
 
-        cy.get('[id="criteria_search_value"]').type('cash');
+        cy.get('[id="criteria_search_value"]').type('bank_transfer');
 
         cy.get('*[class^="ui blue labeled icon button"]').click();
 
         cy.get('*[class^="ui labeled icon button"]').last().click();
 
-        cy.get('[id="sylius_payment_method_enabled"]').click({ force: true });
-
+        cy.get('[id="sylius_payment_method_translations_en_US_name"]').type('Credit card');
+       
         cy.get('[id="sylius_save_changes_button"]').scrollIntoView().click();
 
         cy.get('body').should('contain', 'Payment method has been successfully updated.');
+
+        cy.clickInFirst('a[href="/admin/payment-methods/"]');
+
+        cy.get('body').should('contain', 'Credit card');
     })
 
     it('try searching for a non existent payment method', () => {
         cy.clickInFirst('a[href="/admin/payment-methods/"]');
 
-        cy.get('[id="criteria_search_value"]').type('credit');
+        cy.get('[id="criteria_search_value"]').type('test');
 
         cy.get('*[class^="ui blue labeled icon button"]').click();
 
