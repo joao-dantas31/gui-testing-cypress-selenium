@@ -1,6 +1,6 @@
 describe('payment methods', () => {
   before(() => {
-    cy.exec('docker exec sylius bin/console sylius:fixtures:load -n && sudo chown -R 33:33 {$PATH_VOLUME}/media && sudo chown -R 33:33 {$PATH_VOLUME}/sessions', { env: { PATH_VOLUME: 'put the path volume here' }, failOnNonZeroExit: false })
+    cy.exec('docker exec sylius bin/console sylius:fixtures:load -n && sudo chown -R 33:33 media && sudo chown -R 33:33 sessions', { failOnNonZeroExit: false })
   })
 
   beforeEach(() => {
@@ -59,11 +59,11 @@ describe('payment methods', () => {
     cy.get('[id="stripe_checkout"]').click();
 
     // Type the code in value input
-    cy.get('[id="sylius_payment_method_code"]').type('test_payment');
+    cy.get('[id="sylius_payment_method_code"]').type('test_payment_2');
     // Select the position
-    cy.get('[id="sylius_payment_method_position"]').type('2');
+    cy.get('[id="sylius_payment_method_position"]').type('3');
     // Type the us name in value input
-    cy.get('[id="sylius_payment_method_translations_en_US_name"]').type('test_payment_US');
+    cy.get('[id="sylius_payment_method_translations_en_US_name"]').type('test_payment_2_US');
 
     // Type the publishable key in value input
     cy.get('[id="sylius_payment_method_gatewayConfig_config_publishable_key"]').type('123');
@@ -88,14 +88,14 @@ describe('payment methods', () => {
     cy.get('*[class^="ui labeled icon button "]').last().click();
 
     // Change the payment enable checkbox to false
-    cy.get('[id="sylius_payment_method_enabled"]').click();
+    cy.get('*[class^="ui toggle checkbox"]').first().click();
     // Click on Save changes button
     cy.get('[id="sylius_save_changes_button"]').scrollIntoView().click();
 
     // Click in payment methods in side menu
     cy.clickInFirst('a[href="/admin/payment-methods/"]');
     // Type in value input to search for specify payment method
-    cy.get('[id="criteria_search_value"]').type('cash');
+    cy.get('[id="criteria_search_value"]').type('bank');
     // Click in filter blue button
     cy.get('*[class^="ui blue labeled icon button"]').click();
 
@@ -112,7 +112,7 @@ describe('payment methods', () => {
     // Click in filter blue button
     cy.get('*[class^="ui blue labeled icon button"]').click();
     // Click in edit of the last payment method
-    cy.get('*[class^="ui red labeled icon button"]').click();
+    cy.get('*[class^="ui red labeled icon button"]').eq(1).click();
     // Click in confirm button
     cy.get('[id="confirmation-button"]').click();
 
@@ -143,7 +143,7 @@ describe('payment methods', () => {
     // Click in filter blue button
     cy.get('*[class^="ui blue labeled icon button"]').click();
     // Click in edit of the last payment method
-    cy.get('*[class^="ui red labeled icon button"]').click();
+    cy.get('*[class^="ui red labeled icon button"]').eq(1).click();
     // Click in confirm button
     cy.get('[id="confirmation-button"]').click();
 
