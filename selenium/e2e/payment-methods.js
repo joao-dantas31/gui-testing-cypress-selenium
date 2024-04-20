@@ -52,6 +52,57 @@ describe('payment methods', () => {
     assert(bodyText.includes('Payment method has been successfully updated.'));
   });
 
+  it('search for a non existent payment method', async () => {
+    await driver.findElement(By.linkText('Payment methods')).click();
+
+    await driver.findElement(By.id('criteria_search_value')).sendKeys('test');
+    await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
+
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('There are no results to display'));
+  });
+
+  it('try to clear filters after filtering', async () => {
+    await driver.findElement(By.linkText('Payment methods')).click();
+
+    await driver.findElement(By.id('criteria_search_value')).sendKeys('cash');
+    await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
+    await driver.findElement(By.linkText('Clear filters')).click();
+
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Bank transfer'));
+  });
+
+  it('trying to search for bank transfer payment method', async () => {
+    await driver.findElement(By.linkText('Payment methods')).click();
+
+    await driver.findElement(By.id('criteria_search_value')).sendKeys('bank');
+
+    await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
+
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(!bodyText.includes('cash_on_delivery'));
+  });
+
+  it('trying to change a payment name', async () => {
+    await driver.findElement(By.linkText('Payment methods')).click();
+
+    await driver.findElement(By.id('criteria_search_value')).sendKeys('cash');
+
+    await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
+
+    const buttons = await driver.findElements(By.css('*[class^="ui labeled icon button "]'));
+    await buttons[buttons.length - 1].click();
+
+    await driver.findElement(By.id('sylius_payment_method_translations_en_US_name')).sendKeys('Credit card');
+
+    await driver.findElement(By.id('sylius_save_changes_button')).click();
+
+    await driver.findElement(By.linkText('Payment methods')).click();
+
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Credit card'));
+  });
   it('create a new offline payment', async () => {
     // Click in payment methods in side menu
     await driver.findElement(By.linkText('Payment methods')).click();
