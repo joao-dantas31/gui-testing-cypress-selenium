@@ -8,8 +8,8 @@ describe('payment methods', () => {
 
   before(async () => {
     driver = await new Builder().forBrowser('firefox').build();
-
-    await exec('docker exec sylius bin/console sylius:fixtures:load -n && sudo chown -R 33:33 /home/joao/Documentos/disciplinas/media && sudo chown -R 33:33 /home/joao/Documentos/disciplinas/sessions');
+    const path = 'path to your volume media and sessions'
+    await exec(`docker exec sylius bin/console sylius:fixtures:load -n && sudo chown -R 33:33 ${path}/media && sudo chown -R 33:33 ${path}/sessions`);
   });
 
   after(async () => {
@@ -103,6 +103,7 @@ describe('payment methods', () => {
     const bodyText = await driver.findElement(By.tagName('body')).getText();
     assert(bodyText.includes('Credit card'));
   });
+
   it('create a new offline payment', async () => {
     // Click in payment methods in side menu
     await driver.findElement(By.linkText('Payment methods')).click();
@@ -185,7 +186,6 @@ describe('payment methods', () => {
     const tableText = await driver.findElement(By.css('*[class^="ui sortable stackable very basic celled table"]')).getText();
     assert(tableText.includes('Disabled'));
   });
-
 
   it('removing a used payment', async () => {
     // Click in payment methods in side menu
